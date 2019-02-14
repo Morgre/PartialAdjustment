@@ -18,6 +18,8 @@ P = load("TransMat.mat",'-mat');
 TransMat = P.P;
 clear P;
 
+%% create grid for capital
+
 %% Solve constraint problem on the grid
 
 dev = 1;
