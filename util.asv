@@ -3,9 +3,7 @@
 % model according to the paper of Bongini (2018) on Partial Adjustment
 function util = util(z,k,p,kprime, pprime)
 global chi delta r xi tau_d tau_c A
-k = kron(k, ones(length(k),1));
-kprime = kron(ones(length(k),1), k);
-z = kron(z, ones(length(k),1));
+k = kron(k, ones(length(k),
 
 %calculate profits
 pi = A*z.*k.^chi;

@@ -20,7 +20,7 @@ clear P;
 
 %% create grid for capital
 k_ss = 
-k_grid = linspace(0.5*k_ss, 1.5*k_ss, 201);
+k_grid = linspace(0.5*k_ss, 1.5*k_ss, 51);
 
 %% Combine grids to create grid-vectors
 k_grid_vector = zeros(length(k_grid)*length(z),1);
@@ -39,4 +39,4 @@ dev = 1;
 maxdev = maxdev = 10^(-5); % Stopping condition
 maxiter = 10000;
 while abs(dev) > maxdev
-    Vnew = 
+    Vnew = util(z_grid, 
