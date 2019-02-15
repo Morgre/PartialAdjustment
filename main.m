@@ -38,5 +38,11 @@ trMa = kron(ones(length(k_grid),1), TransMat);
 dev = 1;
 maxdev = maxdev = 10^(-5); % Stopping condition
 maxiter = 10000;
-while abs(dev) > maxdev
-    Vnew = util(z_grid, 
+iter = 0;
+V = 
+while (abs(dev) > maxdev) && (iter <= maxiter)
+    Vnew = util(z_grid, k_grid, p_grid, k_grid, p_grid) + V; %include transition matrix between the states
+    dev = Vnew-V;
+    iter = iter+1;
+    V = Vnew
+end
