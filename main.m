@@ -20,7 +20,7 @@ z = transpose(linspace(0.5, 1.5, 3));
 P = [0.5, 0.25, 0.25; 0.25, 0.5, 0.25; 0.25, 0.25, 0.5];
 
 %% create grid for capital
-k_ss = 1
+k_ss = 1;
 k_grid = linspace(0.5*k_ss, 1.5*k_ss, 5);
 
 %% Combine grids to create grid-vectors
