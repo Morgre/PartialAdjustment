@@ -12,7 +12,7 @@ z = kron(ones(a*b,1),z);
 
 
 %calculate profits
-pi = A*z*k.^chi;
+pi = A*z.*k.^chi;
 
 % check for indicator with y
 p =1/(1+r/(1+r))*(s*(1-delta)*k +(1-tau_c)*A*z(1)*k.^chi+tau_c*k);
