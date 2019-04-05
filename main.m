@@ -5,7 +5,6 @@
 %% Housekeeping
 clear all
 clc
-
 %% Parameter initalization
 global chi delta r xi tau_d tau_c A s beta
 
@@ -32,8 +31,8 @@ knext_grid = linspace(0.5*k_ss, 1.5*k_ss, 7);
 
 %% create grid for debt
 p_ss = s*(1-delta)*k_ss+A*z(1)*k_ss^chi;
-p_grid = linspace(0, 2*p_ss,7);
-pnext_grid = linspace(0,2*p_ss,7);
+p_grid = linspace(-2*p_ss, 2*p_ss,7);
+pnext_grid = linspace(-2*p_ss,2*p_ss,7);
 
 
 %% Combine grids to grid matrix
@@ -48,14 +47,13 @@ pnext_column = kron(ones(length(k_grid)*length(knext_grid)*...
 z_column = kron(ones(length(k_grid)*length(knext_grid)*length(p_grid)...
            *length(pnext_grid),1), z);
 grid_matrix = [k_column, p_column, knext_column, pnext_column, z_column];
-%% create transition vector of shocks to calculate expectations
-%trMa = kron(P, eye(length(k)*length(k)));
+
 %% Solve constraint problem on the grids using Value function iteration
 dev = 1;
 maxdev = 10^(-5); % Stopping condition
 maxiter = 100000;
 iter = 0;
-V = 50*ones(length(k_grid)*length(p_grid)*length(z),1);
+V = ones(length(k_grid)*length(p_grid)*length(z),1);
 utility = zeros(length(grid_matrix(:,1)),1);
 for i = 1:length(grid_matrix(:,1))
     utility(i,1)= util(grid_matrix(i,1), grid_matrix(i,2),...
@@ -63,12 +61,12 @@ for i = 1:length(grid_matrix(:,1))
 end
 while (max(abs(dev)) > maxdev) && (iter <= maxiter)
     V_help = reshape(V,length(z), length(V)/length(z));
-    V_inter = P*V_help;
-    V = reshape(V_inter, length(V),1);
-    V_util = beta*kron(ones(length(k_grid)*length(p_grid),1),V)+utility;
+    V_inter = kron(ones(length(k_grid)*length(p_grid),1),P*V_help);
+    V_inter = reshape(V_inter, numel(V_inter),1); 
+    V_util = beta*V_inter+utility;
     V_util = reshape(V_util, length(z), length(k_grid)*length(p_grid), length(knext_grid)*length(pnext_grid));
     V_util = max(V_util,[], 2);
-    Vnew = reshape(V_util, length(k_grid)*length(p_grid)*length(z),1);
+    Vnew = reshape(V_util, length(k_grid)*length(p_grid)*length(z),1); %change+permute first
     dev = Vnew-V;
     iter = iter+1;
     V = Vnew;
