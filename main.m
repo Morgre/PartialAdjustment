@@ -9,7 +9,7 @@ clc
 global chi delta r xi tau_d tau_c A s beta
 
 chi = 0.25;
-delta = 1;
+delta = 0.1;
 r = 0.1;
 xi = 0.2;
 tau_d = 0.2;
@@ -18,7 +18,7 @@ A = 1;
 s = 0.5;
 beta = 0.9;
 %% create grid of shocks + Transition Matrix
-z = transpose(linspace(0.5, 1.5, 3));
+z = transpose(linspace(0.9, 1.1, 3));
 %P = load("TransMat.mat",'-mat'); for length(z)=40, check for smaller grid
 %first
 %TransMat = P.P;
@@ -31,8 +31,8 @@ knext_grid = linspace(0.5*k_ss, 1.5*k_ss, 31);
 
 %% create grid for debt
 p_ss = s*(1-delta)*k_ss+A*z(1)*k_ss^chi;
-p_grid = linspace(-2*p_ss, 2*p_ss,31);
-pnext_grid = linspace(-2*p_ss,2*p_ss,31);
+p_grid = linspace(-2*p_ss, 2*p_ss, 31);
+pnext_grid = linspace(-2*p_ss,2*p_ss, 31);
 
 
 %% Combine grids to grid matrix
@@ -70,27 +70,55 @@ end
 
 %% Plot policy functions
 index = reshape(index, length(k_grid)*length(p_grid)*length(z),1);
-policy_plot_z1 = reshape(index(1:3:end), length(p_grid), length(k_grid)); 
-policy_plot_z2 = reshape(index(2:3:end), length(p_grid), length(k_grid));
-policy_plot_z3 = reshape(index(3:3:end), length(p_grid), length(k_grid));
+index_debt = rem(index,length(k_grid));
+index_capital = (index-index_debt)/length(k_grid);
 
-subplot(1,3,1);
-surf(policy_plot_z1);
+policy_plot_z1_debt = reshape(index_debt(1:3:end), length(p_grid), length(k_grid)); 
+policy_plot_z2_debt = reshape(index_debt(2:3:end), length(p_grid), length(k_grid));
+policy_plot_z3_debt = reshape(index_debt(3:3:end), length(p_grid), length(k_grid));
+
+policy_plot_z1_capital = reshape(index_capital(1:3:end), length(p_grid), length(k_grid)); 
+policy_plot_z2_capital = reshape(index_capital(2:3:end), length(p_grid), length(k_grid));
+policy_plot_z3_capital = reshape(index_capital(3:3:end), length(p_grid), length(k_grid));
+
+subplot(2,3,1);
+surf(policy_plot_z1_debt);
 title('Policy function for debt, Shock low')
 xlabel('Debt grid point')
 ylabel('Capital grid point')
 zlabel('Debt tomorrow')
 
-subplot(1,3,2);
-surf(policy_plot_z2);
+subplot(2,3,2);
+surf(policy_plot_z2_debt);
 title('Policy function for debt, Shock mid')
 xlabel('Debt grid point')
 ylabel('Capital grid point')
 zlabel('Debt tomorrow')
 
-subplot(1,3,3);
-surf(policy_plot_z3);
+subplot(2,3,3);
+surf(policy_plot_z3_debt);
 title('Policy function for debt, Shock high')
 xlabel('Debt grid point')
 ylabel('Capital grid point')
 zlabel('Debt tomorrow')
+
+subplot(2,3,4);
+surf(policy_plot_z1_capital);
+title('Policy function for capital, Shock low')
+xlabel('Debt grid point')
+ylabel('Capital grid point')
+zlabel('Capital tomorrow')
+
+subplot(2,3,5);
+surf(policy_plot_z2_capital);
+title('Policy function for capital, Shock mid')
+xlabel('Debt grid point')
+ylabel('Capital grid point')
+zlabel('Capital tomorrow')
+
+subplot(2,3,6);
+surf(policy_plot_z3_capital);
+title('Policy function for capital, Shock high')
+xlabel('Debt grid point')
+ylabel('Capital grid point')
+zlabel('Capital tomorrow')

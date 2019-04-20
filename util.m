@@ -19,5 +19,5 @@ Psi = (c>0).*(1-tau_d)+(c<0).*(1+xi);
 
 
 %calculate utility
-util=Psi.*c+(-10000000).*(pprime > s*(1-delta)*kprime+pi-g);
+util=Psi.*c+(-10000).*(pprime > s*(1-delta)*kprime+pi-g)+(-10000).*(kprime<(1-delta).*k);
 end
