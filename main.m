@@ -10,29 +10,29 @@ global chi delta r xi tau_d tau_c A s beta
 
 chi = 0.25;
 delta = 0.1;
-r = 0.1;
+r = 0.05;
 xi = 0.2;
 tau_d = 0.2;
 tau_c = 0.2;
 A = 1;
 s = 0.5;
-beta = 0.9;
+beta = 0.98;
 %% create grid of shocks + Transition Matrix
-z = transpose(linspace(0.9, 1.1, 3));
+z = transpose(linspace(0.8, 1.2, 3));
 %P = load("TransMat.mat",'-mat'); for length(z)=40, check for smaller grid
 %first
 %TransMat = P.P;
-P = [0.5, 0.25, 0.25; 0.25, 0.5, 0.25; 0.25, 0.25, 0.5];
+P = [0.8, 0.1, 0.1; 0.1, 0.8, 0.1; 0.1, 0.1, 0.8];
 
 %% create grid for capital
 k_ss = (chi*A+z(1)/delta)^(1-chi);
-k_grid = linspace(0.5*k_ss, 1.5*k_ss, 31);
-knext_grid = linspace(0.5*k_ss, 1.5*k_ss, 31);
+k_grid = linspace(0, 2*k_ss, 21);
+knext_grid = linspace(0, 2*k_ss, 21);
 
 %% create grid for debt
 p_ss = s*(1-delta)*k_ss+A*z(1)*k_ss^chi;
-p_grid = linspace(-2*p_ss, 2*p_ss, 31);
-pnext_grid = linspace(-2*p_ss,2*p_ss, 31);
+p_grid = linspace(-4*p_ss, 4*p_ss, 21);
+pnext_grid = linspace(-4*p_ss, 4*p_ss, 21);
 
 
 %% Combine grids to grid matrix
@@ -73,9 +73,9 @@ index = reshape(index, length(k_grid)*length(p_grid)*length(z),1);
 index_debt = rem(index,length(k_grid));
 index_capital = (index-index_debt)/length(k_grid);
 
-policy_plot_z1_debt = reshape(index_debt(1:3:end), length(p_grid), length(k_grid)); 
-policy_plot_z2_debt = reshape(index_debt(2:3:end), length(p_grid), length(k_grid));
-policy_plot_z3_debt = reshape(index_debt(3:3:end), length(p_grid), length(k_grid));
+policy_plot_z1_debt = reshape(index_debt(1:length(z):end), length(p_grid), length(k_grid)); 
+policy_plot_z2_debt = reshape(index_debt(round((length(z)+1)/2):length(z):end), length(p_grid), length(k_grid));
+policy_plot_z3_debt = reshape(index_debt(length(z):length(z):end), length(p_grid), length(k_grid));
 
 policy_plot_z1_capital = reshape(index_capital(1:3:end), length(p_grid), length(k_grid)); 
 policy_plot_z2_capital = reshape(index_capital(2:3:end), length(p_grid), length(k_grid));
